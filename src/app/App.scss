@@ -7,19 +7,80 @@
 .App {
   .exercise-index {
     margin: 30px 0;
+
     a {
       border-left: 4px solid transparent;
       padding-left: 10px;
+
       &.active {
         border-color: $green;
       }
     }
   }
+
   .exercise-links {
     line-height: 1.45;
   }
+
   .exercise-show {
     border-top: 1px solid $gray-lighter;
     padding-top: 50px;
+  }
+
+  .progress-caption {
+    text-align: center;
+    font-size: 18px;
+    padding: 10px;
+    margin-bottom: 20px;
+  }
+
+  .progress-div {
+    width: 100%;
+    height: 6px;
+    background-color: rgb(233, 233, 233);
+    border-radius: .5rem;
+
+    & .progress {
+      width: 0%;
+      height: 6px;
+      background-color: rgb(62, 122, 235);
+      background-image: linear-gradient(to right, orange, red);
+      height: 6px;
+      border-radius: 1rem;
+      transition: 1s ease;
+    }
+
+    &.hidden {
+      opacity: 0;
+      transition: all 700ms linear 500ms; // <- the last value defines transition-delay
+    }
+
+    &.show {
+      opacity: 100;
+    }
+  }
+
+  .button-group {
+    text-align: center;
+    padding: 20px;
+
+    & .progress-btn {
+      padding: 15px 30px;
+      border: 1px solid #00c1a6;
+      border-radius: 30px;
+      margin: 10px;
+
+      &.red {
+        border-color: #f90847;
+      }
+
+      &:hover {
+        border-width: 2px;
+      }
+
+      &:active {
+        border-width: 3px;
+      }
+    }
   }
 }
