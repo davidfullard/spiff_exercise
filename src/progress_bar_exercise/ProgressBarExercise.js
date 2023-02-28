@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Exercise from "../exercise/Exercise";
 
 const ProgressBarExercise = () => {
@@ -29,6 +29,7 @@ const SPEED_DEFAULT = HangProgress / HangSecond / 10; // Default speed before us
 const Solution = () => {
   const [running, setRunning] = useState(false); //Check if the progress if running
   const [progress, setProgress] = useState(0); // Current progress
+  const [showProgressBar, setShowProgressBar] = useState(true); // Show or hide progress bar
 
   useEffect(() => {
     return () => {
@@ -41,6 +42,10 @@ const Solution = () => {
     //If the progress reaches to 100%
     if (progress >= CompleteProgress) {
       setRunning(false);
+      //Hide progress bar after 3 seconds
+      setTimeout(() => {
+        setShowProgressBar(false);
+      }, 3 * 1000);
     }
   }, [progress])
 
@@ -60,7 +65,7 @@ const Solution = () => {
 
   //Start request
   const handleStart = () => {
-    if (!running) {
+    if (!running && showProgressBar) {
       if (startInterval) clearInterval(startInterval);
       if (finishInterval) clearInterval(finishInterval);
       setProgress(0);
@@ -92,10 +97,16 @@ const Solution = () => {
     }, 100);
   };
 
+  //shoe progress bar again
+  const displayProgressBar = () => {
+    setShowProgressBar(true);
+    setProgress(0);
+  }
+
   return (
     <div className="App">
       <div>
-        <div className={`progress-div`} style={{ width: '100%' }}>
+        <div className={`progress-div ${showProgressBar ? 'show' : 'hidden'}`} style={{ width: '100%' }}>
           <div style={{ width: `${progress}%` }} className="progress" />
         </div>
         <div className="button-group">
@@ -108,6 +119,15 @@ const Solution = () => {
           >
             Finish Request
           </button>
+          {
+            !showProgressBar &&
+            <button
+              className="progress-btn green"
+              onClick={displayProgressBar}
+            >
+              Show ProgressBar
+            </button>
+          }
         </div>
       </div>
     </div>
