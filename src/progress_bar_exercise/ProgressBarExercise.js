@@ -24,11 +24,16 @@ const CompleteProgress = 100; // Total progress
 const HangProgress = 90; // Hanging progress(over 15 seconds)
 const HangSecond = 15; // Hanging second to progress
 
+const Breakpoints = [20, 40, 60]; // Break points
+const Delta = 3; // Breakpoints delta +-3
+
 const SPEED_DEFAULT = HangProgress / HangSecond / 10; // Default speed before user finish request
+const SPEED_SLOW = 0.2; // Speed after user finish request
 
 const Solution = () => {
   const [running, setRunning] = useState(false); //Check if the progress if running
   const [progress, setProgress] = useState(0); // Current progress
+  const [isBreakPoint, setIsBreakPoint] = useState(true); // Toggle if the progress bar has breakpoints or not
   const [showProgressBar, setShowProgressBar] = useState(true); // Show or hide progress bar
 
   useEffect(() => {
@@ -52,6 +57,10 @@ const Solution = () => {
   const handler = () => {
     setProgress((prev) => {
       let speed = SPEED_DEFAULT;
+      if (isBreakPoint) {
+        const isSlow = Breakpoints.some((el) => prev >= el - Delta && prev <= el + Delta); // Check if current progress is around a Breakpoint
+        speed = isSlow ? SPEED_SLOW : SPEED_DEFAULT; // speed around a Breakpoint or Between them
+      }
       const nextValue = prev + speed;
       if (nextValue >= HangProgress) {
         clearInterval(startInterval);
@@ -106,6 +115,7 @@ const Solution = () => {
   return (
     <div className="App">
       <div>
+        <p className="progress-caption">Progress Bar ({isBreakPoint ? "BreakPoints" : "No BreakPoints"})</p>
         <div className={`progress-div ${showProgressBar ? 'show' : 'hidden'}`} style={{ width: '100%' }}>
           <div style={{ width: `${progress}%` }} className="progress" />
         </div>
@@ -128,6 +138,12 @@ const Solution = () => {
               Show ProgressBar
             </button>
           }
+          <button
+            className="progress-btn green"
+            onClick={() => setIsBreakPoint(!isBreakPoint)}
+          >
+            ProgressBar ({isBreakPoint ? "BreakPoints" : "No BreakPoints"})
+          </button>
         </div>
       </div>
     </div>
